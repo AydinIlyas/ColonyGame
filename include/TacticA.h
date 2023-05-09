@@ -10,6 +10,6 @@ struct TacticA{
 typedef struct TacticA* TacticA;
 
 TacticA new_TacticA();
-int fight(const TacticA);
+int fightA(const TacticA);
 void deleteTacticA(const TacticA);
 #endif
