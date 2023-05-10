@@ -1,17 +1,15 @@
-#include "TacticA.h"
-#include "TacticB.h"
-#include "ProductionA.h"
-#include "ProductionB.h"
-#include "Colony.h"
+#include "Game.h"
 typedef void* Object;
 int main()
 {
     srand(time(NULL));
-    Colony clny1=new_Colony('a',10,'a');
-    Colony clny2=new_Colony('b',20,'b');
+    Game game=new_Game();
+    game->read(game);
+    Colony clny1=new_Colony('a',10,'a','b');
+    Colony clny2=new_Colony('b',20,'b','a');
     clny1->fight(clny1,clny2);
-
-
+    clny1->delete(clny1);
+    clny2->delete(clny2);
 
 
 
