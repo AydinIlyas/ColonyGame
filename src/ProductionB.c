@@ -5,7 +5,6 @@ ProductionB new_ProductionB()
     ProductionB this= (ProductionB)malloc(sizeof(struct ProductionB));
     this->super=new_Production();
     this->super->produce=&produceB;
-    this->produce=&produceB;
     this->delete=&delete_ProductionB;
     return this;
 }

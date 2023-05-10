@@ -5,7 +5,7 @@
 
 struct ProductionB {
     Production super;
-    int (*produce)(struct ProductionB*);
+    
     void (*delete)(struct ProductionB*);
 };
 typedef struct ProductionB* ProductionB;

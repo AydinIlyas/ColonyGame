@@ -4,7 +4,6 @@
 #include "Production.h"
 struct ProductionA {
     Production super;
-    int (*produce)(struct ProductionA*);
     void (*delete)(struct ProductionA*);
 };
 typedef struct ProductionA* ProductionA;

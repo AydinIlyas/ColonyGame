@@ -4,7 +4,6 @@
 struct TacticA{
 
     Tactic super;
-    int (*fight)(struct TacticA*);
     void (*delete)(struct TacticA*);
 };
 typedef struct TacticA* TacticA;

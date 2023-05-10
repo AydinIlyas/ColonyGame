@@ -4,13 +4,13 @@ TacticA new_TacticA()
     TacticA this=(TacticA)malloc(sizeof(struct TacticA));
     this->super=new_Tactic();
     this->super->fight=&fightA;
-    this->fight=&fightA;
     this->delete=&deleteTacticA;
     return this;
 }
 int fightA(const TacticA this)
 {
-    this->super->power=(rand()%1000)+0;
+    printf("this is A");
+    this->super->power=(rand()%1001);
     return this->super->power;
 }
 

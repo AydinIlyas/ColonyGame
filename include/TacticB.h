@@ -6,7 +6,6 @@
 #include <stdio.h>
 struct TacticB{
     Tactic super;
-    int (*fight)(struct TacticB*);
     void (*delete)(struct TacticB*);
 };
 typedef struct TacticB* TacticB;
