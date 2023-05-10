@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "Colony.h"
 struct Game{
-
     void (*read)(struct Game*);
     void (*delete)(struct Game*);
 };
