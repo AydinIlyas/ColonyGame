@@ -4,8 +4,9 @@ Game new_Game()
     Game this = (Game)malloc(sizeof(struct Game));
     this->size=0;
     this->capacity=5;
-    this->round=-1;
+    this->round=0;
     this->read = &read;
+    this->showPopulations=&showPopulations;
     this->startRound=&startRound;
     this->delete = &deleteGame;
     this->colonies=NULL;
@@ -44,20 +45,20 @@ void read(const Game this)
     this->colonies=malloc(this->size*sizeof(struct Colony*));
     for (size_t i = 0; i < this->size; i++)
     {
-        this->colonies[i]=new_Colony(rand()%256,arr[i],rand()%2+97,rand()%2+97);
+        this->colonies[i]=new_Colony(rand()%29+64,arr[i],rand()%2+97,rand()%2+97);
     }
     free(arr);
 }
 
 void printRound(const Game this)
 {
-    printf("----------------------------------------------------------------------\n%d\n",++this->round);
+    printf("----------------------------------------------------------------------\n%d.ROUND\n",this->round);
+    printf("Colony\t\tPopulation\tFood\t\tWins\t\tLoses\n");
     for(size_t i=0;i<this->size;i++)
     {
         char* str=this->colonies[i]->toString(this->colonies[i]);
         printf("%s",str);
     }
-    getch();
 }
 void roundEnd(const Game this)
 {
@@ -67,9 +68,28 @@ void roundEnd(const Game this)
         this->colonies[i]->endRound(this->colonies[i]);
     }
 }
-void startRound(const Game this)
+int checkWinner(const Game this)
+{
+    int counter=0;
+    for(size_t i=0;i<this->size;i++)
+    {
+        if(this->colonies[i]->food>0&&this->colonies[i]->population>0)
+        {
+            counter++;
+            if(counter>1)return 0;
+        }
+    }
+    return 1;
+}
+
+void showPopulations(const Game this)
 {
     printRound(this);
+}
+
+void startRound(const Game this)
+{
+    this->round++;
     for(size_t i=0;i<this->size;i++)
     {
         for(size_t j=i+1;j<this->size;j++)
@@ -79,8 +99,14 @@ void startRound(const Game this)
             this->colonies[j]->checkAndReset(this->colonies[j]);
         }
     }
-    // roundEnd(this);
+    roundEnd(this);
     printRound(this);
+    printf("Press q for EXIT");
+    char g=getch();
+    if(g=='q')return;
+    if(checkWinner(this))return;
+    else
+    startRound(this);
 }
 
 void deleteGame(const Game this)

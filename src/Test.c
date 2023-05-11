@@ -6,6 +6,8 @@ int main()
     srand(time(NULL));
     Game game=new_Game();
     game->read(game);
+    game->showPopulations(game);
+    getch();
     game->startRound(game);
     game->delete(game);
     //130-239

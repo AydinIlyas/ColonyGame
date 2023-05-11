@@ -22,6 +22,7 @@ Colony new_Colony(char symbol, int population, char tactic, char production)
     this->loses = 0;
 
     this->fight = &fight;
+    this->produce=&produce;
     this->checkAndReset = &checkAndReset;
     this->endRound=&endRound;
     this->delete = &deleteColony;
@@ -129,14 +130,14 @@ char *toString(const Colony this)
         length += LengthInt(this->wins);
         length += LengthInt(this->loses);
 
-        str = (char *)malloc(sizeof(char) * length + 100);
+        str = (char *)malloc(sizeof(char) * length + 1000);
         sprintf(str, "%c\t\t%d\t\t%d\t\t%d\t\t%d\n", this->symbol, this->population, this->food, this->wins, this->loses);
 
     }
     else{
         length+=8;
         const char* lost="--"; 
-        str = (char *)malloc(sizeof(char) * length + 10);
+        str = (char *)malloc(sizeof(char) * length + 1000);
         sprintf(str, "%c\t\t%s\t\t%s\t\t%s\t\t%s\n", this->symbol, lost,lost,lost,lost);
     }
     
