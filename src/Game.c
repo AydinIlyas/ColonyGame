@@ -40,15 +40,21 @@ void read(const Game this)
 
     } while (temp != '\n');
     this->colonies=malloc(this->size*sizeof(struct Colony*));
-    for (int i = 0; i < this->size; i++)
+    for (size_t i = 0; i < this->size; i++)
     {
         this->colonies[i]=new_Colony(rand()%256,arr[i],rand()%2+97,rand()%2+97);
     }
+    free(arr);
 }
 
 void deleteGame(const Game this)
 {
     if (this == NULL)
         return;
+    for(size_t i=0;i<this->size;i++)
+    {
+        this->colonies[i]->delete(this->colonies[i]);
+    }
+    free(this->colonies);
     free(this);
 }

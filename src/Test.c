@@ -11,7 +11,9 @@ int main()
     {
         char* str=candidates[i]->toString(candidates[i]);
         printf("%s",str);
+        free(str);
     }
     printf("Size: %d\t\tCapacity: %d",game->size,game->capacity);
+    game->delete(game);
     //130-239
 }

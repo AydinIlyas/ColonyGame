@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include "Colony.h"
 struct Game{
-    int size;
-    int capacity;
+    size_t size;
+    size_t capacity;
     Colony* colonies;
     
     void (*read)(struct Game*);
