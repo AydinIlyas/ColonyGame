@@ -2,44 +2,47 @@
 Game new_Game()
 {
     Game this = (Game)malloc(sizeof(struct Game));
+    this->size=0;
+    this->capacity=5;
     this->read = &read;
     this->delete = &deleteGame;
+    this->colonies=NULL;
 }
-void expand(int *arr, size_t capacity)
+void expand(int **arr,const Game this)
 {
-    int *myrealloced_array = realloc(arr, capacity * sizeof(int));
+    this->capacity=this->capacity*2;
+    int *myrealloced_array = realloc(*arr, this->capacity * sizeof(int));
     if (myrealloced_array)
     {
-        arr = myrealloced_array;
+        *arr = myrealloced_array;
     }
     else
     {
         // deal with realloc failing because memory could not be allocated.
         printf("Realloc failed");
     }
+
 }
 
 void read(const Game this)
 {
-    size_t size = 0;
-    size_t capacity = 5;
-    int *arr = malloc(capacity * sizeof(int));
+    
+    int *arr = (int*)malloc(this->capacity * sizeof(int));
     char temp;
     do
     {
-        scanf("%d%c", &arr[size], &temp);
-        size++;
-        if (capacity == size)
+        if (this->capacity == this->size)
         {
-            capacity *= 2;
-            printf("\n%d\n", capacity);
-            expand(arr, capacity);
+            expand(&arr,this);
         }
+        scanf("%d%c", &arr[this->size], &temp);
+        this->size++;
+
     } while (temp != '\n');
-    
-    for (int i = 0; i < size; i++)
+    this->colonies=malloc(this->size*sizeof(struct Colony*));
+    for (int i = 0; i < this->size; i++)
     {
-        
+        this->colonies[i]=new_Colony(rand()%256,arr[i],rand()%2+97,rand()%2+97);
     }
 }
 

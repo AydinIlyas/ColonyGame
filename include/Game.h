@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include "Colony.h"
 struct Game{
+    int size;
+    int capacity;
+    Colony* colonies;
+    
     void (*read)(struct Game*);
     void (*delete)(struct Game*);
 };

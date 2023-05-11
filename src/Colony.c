@@ -23,6 +23,7 @@ Colony new_Colony(char symbol,int population,char tactic,char production)
 
     this->fight=&fight;
     this->delete=&deleteColony;
+    this->toString=&toString;
     
 }
 
@@ -47,6 +48,23 @@ void produce(const Colony this)
         this->food+=((ProductionB)this->Production)->super->produce(this->Production);
     }
 }
+int LengthInt(int num){
+	int length = floor(log10(abs(num))) + 1;
+	return length;
+}
+char* toString(const Colony this)
+{
+    int length=0;
+    length+=3;
+    length+=LengthInt(this->population);
+    length+=LengthInt(this->food);
+    
+    char* str=(char*)malloc(sizeof(char)*length+10);
+
+    sprintf(str,"%c\t\t%d\t\t%d\t\t%c\t\t%c\n",this->symbol,this->population,this->food,this->tacticCh,this->productionCh);
+    return str;
+}
+
 void deleteColony(const Colony this)
 {
     if(this==NULL)return;
