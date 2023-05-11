@@ -9,7 +9,6 @@ TacticA new_TacticA()
 }
 int fightA(const TacticA this)
 {
-    printf("this is A");
     this->super->power=(rand()%1001);
     return this->super->power;
 }

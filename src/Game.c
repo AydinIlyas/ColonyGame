@@ -4,7 +4,9 @@ Game new_Game()
     Game this = (Game)malloc(sizeof(struct Game));
     this->size=0;
     this->capacity=5;
+    this->round=-1;
     this->read = &read;
+    this->startRound=&startRound;
     this->delete = &deleteGame;
     this->colonies=NULL;
 }
@@ -45,6 +47,40 @@ void read(const Game this)
         this->colonies[i]=new_Colony(rand()%256,arr[i],rand()%2+97,rand()%2+97);
     }
     free(arr);
+}
+
+void printRound(const Game this)
+{
+    printf("----------------------------------------------------------------------\n%d\n",++this->round);
+    for(size_t i=0;i<this->size;i++)
+    {
+        char* str=this->colonies[i]->toString(this->colonies[i]);
+        printf("%s",str);
+    }
+    getch();
+}
+void roundEnd(const Game this)
+{
+    for(size_t i=0;i<this->size;i++)
+    {
+        this->colonies[i]->produce(this->colonies[i]);
+        this->colonies[i]->endRound(this->colonies[i]);
+    }
+}
+void startRound(const Game this)
+{
+    printRound(this);
+    for(size_t i=0;i<this->size;i++)
+    {
+        for(size_t j=i+1;j<this->size;j++)
+        {
+            this->colonies[i]->fight(this->colonies[i],this->colonies[j]);
+            this->colonies[i]->checkAndReset(this->colonies[i]);
+            this->colonies[j]->checkAndReset(this->colonies[j]);
+        }
+    }
+    // roundEnd(this);
+    printRound(this);
 }
 
 void deleteGame(const Game this)

@@ -6,14 +6,7 @@ int main()
     srand(time(NULL));
     Game game=new_Game();
     game->read(game);
-    Colony* candidates=game->colonies;
-    for(int i=0;i<game->size;i++)
-    {
-        char* str=candidates[i]->toString(candidates[i]);
-        printf("%s",str);
-        free(str);
-    }
-    printf("Size: %d\t\tCapacity: %d",game->size,game->capacity);
+    game->startRound(game);
     game->delete(game);
     //130-239
 }
