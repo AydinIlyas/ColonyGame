@@ -5,8 +5,9 @@
 struct Game{
     size_t size;
     size_t capacity;
-    Colony* colonies;
+    Colony* allColonies;
     size_t round;
+    short gameStatus;
 
     void (*showPopulations)(struct Game*);
     void (*startRounds)(struct Game*);
