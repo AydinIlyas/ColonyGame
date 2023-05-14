@@ -8,6 +8,7 @@
 #include "string.h"
 #include "math.h"
 typedef void* Object;
+typedef enum {false,true} bool;
 struct Colony{
 
     char symbol;
@@ -19,9 +20,10 @@ struct Colony{
     char productionCh;
     int wins;
     int loses;
+    bool alive;
 
     void (*fight)(struct Colony*, struct Colony*);
-    void (*checkAndReset)(struct Colony*);
+    bool (*checkAndReset)(struct Colony*);
     void (*roundImpact)(struct Colony*);
     void (*produce)(struct Colony*);
     char* (*toString)(struct Colony*);
@@ -30,7 +32,7 @@ struct Colony{
 typedef struct Colony* Colony;
 Colony new_Colony(char symbol,int population,char tactic,char production);
 void fightColonies(const Colony, const Colony);
-void checkAndReset(const Colony);
+bool checkAndReset(const Colony);
 void roundImpact(const Colony);
 void produceColony(const Colony);
 char* toString(const Colony);

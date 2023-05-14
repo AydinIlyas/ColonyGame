@@ -1,7 +1,7 @@
 #include "Game.h"
-typedef void *Object;
 int main()
 {
+    
     srand(time(NULL));
     int play = 1;
     while (play)

@@ -3,9 +3,11 @@
 #include "Colony.h"
 #include <conio.h>
 struct Game{
-    size_t size;
+    size_t sizeAll;
+    size_t sizeAlive;
     size_t capacity;
     Colony* allColonies;
+    Colony* aliveColonies;
     size_t round;
     short gameStatus;
 

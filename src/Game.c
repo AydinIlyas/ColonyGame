@@ -2,7 +2,8 @@
 Game new_Game()
 {
     Game this = (Game)malloc(sizeof(struct Game));
-    this->size = 0;
+    this->sizeAll = 0;
+    this->sizeAlive = 0;
     this->capacity = 5;
     this->round = 0;
     this->gameStatus = 1;
@@ -11,6 +12,7 @@ Game new_Game()
     this->startRounds = &startRounds;
     this->delete = &deleteGame;
     this->allColonies = NULL;
+    this->aliveColonies = NULL;
 }
 void expand(int **arr, const Game this)
 {
@@ -34,18 +36,25 @@ void getPopulations(const Game this)
     char temp;
     do
     {
-        if (this->capacity == this->size)
+        if (this->capacity == this->sizeAll)
         {
             expand(&arr, this);
         }
-        scanf("%d%c", &arr[this->size], &temp);
-        this->size++;
+        scanf("%d%c", &arr[this->sizeAll], &temp);
+        this->sizeAll++;
 
     } while (temp != '\n');
-    this->allColonies = malloc(this->size * sizeof(struct Colony *));
-    for (size_t i = 0; i < this->size; i++)
+    this->allColonies = malloc(this->sizeAll * sizeof(struct Colony *));
+    for (size_t i = 0; i < this->sizeAll; i++)
     {
         this->allColonies[i] = new_Colony(rand() % 222 + 33, arr[i], rand() % 2 + 97, rand() % 2 + 97);
+    }
+    
+    this->aliveColonies = malloc(this->sizeAll * sizeof(struct Colony *));
+    this->sizeAlive = this->sizeAll;
+    for (size_t i = 0; i < this->sizeAlive; i++)
+    {
+        this->aliveColonies[i] = this->allColonies[i];
     }
     free(arr);
 }
@@ -56,7 +65,7 @@ void printRound(const Game this, int started)
     if (started == 1)
         printf("%zu.ROUND\n", this->round);
     printf("Colony\t\tPopulation\tFood\t\tWins\t\tLoses\n");
-    for (size_t i = 0; i < this->size; i++)
+    for (size_t i = 0; i < this->sizeAll; i++)
     {
         char *str = this->allColonies[i]->toString(this->allColonies[i]);
         printf("%s", str);
@@ -65,25 +74,25 @@ void printRound(const Game this, int started)
 }
 void roundEnd(const Game this)
 {
-    for (size_t i = 0; i < this->size; i++)
+    for (size_t i = 0; i < this->sizeAlive; i++)
     {
-        this->allColonies[i]->produce(this->allColonies[i]);
-        this->allColonies[i]->roundImpact(this->allColonies[i]);
+        this->aliveColonies[i]->produce(this->aliveColonies[i]);
+        this->aliveColonies[i]->roundImpact(this->aliveColonies[i]);
     }
 }
-int checkWinner(const Game this)
+bool checkWinner(const Game this)
 {
     int counter = 0;
-    for (size_t i = 0; i < this->size; i++)
+    for (size_t i = 0; i < this->sizeAlive; i++)
     {
-        if (this->allColonies[i]->food > 0 && this->allColonies[i]->population > 0)
+        if (this->aliveColonies[i]->alive)
         {
             counter++;
             if (counter > 1)
-                return 0;
+                return false;
         }
     }
-    return 1;
+    return true;
 }
 
 void showPopulations(const Game this)
@@ -104,35 +113,57 @@ void showPopulations(const Game this)
         this->gameStatus = 1;
     }
 }
-
+void shrinkAlives(const Game this, int deads)
+{
+    Colony *tmp = malloc((this->sizeAlive - deads) * sizeof(struct Colony *));
+    for (size_t i = 0, j = 0; i < this->sizeAlive; i++)
+    {
+        if (this->aliveColonies[i]->alive)
+        {
+            tmp[j] = this->aliveColonies[i];
+            j++;
+        }
+    }
+    free(this->aliveColonies);
+    this->aliveColonies=tmp;
+    this->sizeAlive-=deads;
+}
 void startRounds(const Game this)
 {
     if (this->gameStatus == 2 || this->gameStatus == 0)
         return;
     this->round++;
-    for (size_t i = 0; i < this->size; i++)
+    int deads = 0;
+    for (size_t i = 0; i < this->sizeAlive; i++)
     {
-        for (size_t j = i + 1; j < this->size; j++)
+        for (size_t j = i + 1; j < this->sizeAlive; j++)
         {
-            this->allColonies[i]->fight(this->allColonies[i], this->allColonies[j]);
-            this->allColonies[i]->checkAndReset(this->allColonies[i]);
-            this->allColonies[j]->checkAndReset(this->allColonies[j]);
+            this->aliveColonies[i]->fight(this->aliveColonies[i], this->aliveColonies[j]);
+            if (this->aliveColonies[i]->checkAndReset(this->aliveColonies[i]))
+                deads++;
+            if (this->aliveColonies[j]->checkAndReset(this->aliveColonies[j]))
+                deads++;
         }
     }
     roundEnd(this);
     printRound(this, 1);
+    if (deads)
+    {
+        shrinkAlives(this, deads);
+    }
 
     char g;
     if (checkWinner(this))
     {
         printf("\nPRESS A KEY TO EXIT\t|\tr FOR RESTART\n\n");
-        g=getch();
-        if(g=='r')
+        g = getch();
+        if (g == 'r')
         {
-            this->gameStatus=2;
+            this->gameStatus = 2;
         }
-        else{
-            this->gameStatus=0;
+        else
+        {
+            this->gameStatus = 0;
         }
         return;
     }
@@ -158,10 +189,11 @@ void deleteGame(const Game this)
         system("cls");
     if (this == NULL)
         return;
-    for (size_t i = 0; i < this->size; i++)
+    for (size_t i = 0; i < this->sizeAll; i++)
     {
         this->allColonies[i]->delete (this->allColonies[i]);
     }
     free(this->allColonies);
+    free(this->aliveColonies);
     free(this);
 }

@@ -20,7 +20,7 @@ Colony new_Colony(char symbol, int population, char tactic, char production)
 
     this->wins = 0;
     this->loses = 0;
-
+    this->alive=true;
     this->fight = &fightColonies;
     this->produce=&produceColony;
     this->checkAndReset = &checkAndReset;
@@ -37,19 +37,19 @@ void effects(const Colony winner, const Colony loser, int difference)
     loser->food -= tmpFood;
     winner->food += tmpFood;
 }
-void checkAndReset(const Colony colony)
+bool checkAndReset(const Colony this)
 {
-    if (colony->food <= 0 || colony->population <= 0)
+    if(!this->alive)return false;
+    if (this->food <= 0 || this->population <= 0)
     {
-        colony->food = 0;
-        colony->loses = 0;
-        colony->wins = 0;
-        colony->population = 0;
+        this->alive=false;
+        return true;
     }
+    return false;
 }
 void fightColonies(const Colony first, const Colony second)
 {
-    if (first->food <= 0 || second->food <= 0 || first->population <= 0 || second->population <= 0)
+    if (!first->alive||!second->alive)
     {
         return;
     }
@@ -95,13 +95,13 @@ void fightColonies(const Colony first, const Colony second)
 }
 void roundImpact(const Colony this)
 {
-    if(this->food<=0||this->population<=0)return;
+    if(!this->alive)return;
     this->food-=this->population*2; 
     this->population=(double)this->population*12/10;
 }
 void produceColony(const Colony this)
 {
-    if(this->food<=0||this->population<=0)return;
+    if(!this->alive)return;
     if (this->productionCh == 'a')
     {
         this->food += ((ProductionA)this->Production)->super->produce(this->Production);
@@ -118,10 +118,10 @@ int LengthInt(int num)
 }
 char* toString(const Colony this)
 {
-   int length = 0;
+    int length = 0;
     length += 1;
     char *str;
-    if (this->food > 0 && this->population > 0)
+    if (this->alive)
     {
         length += LengthInt(this->population);
         length += LengthInt(this->food);
