@@ -3,10 +3,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "time.h"
+#include <time.h>
 struct Tactic{
-    int power;
-
     int (*fight)();
     void (*delete)(struct Tactic*);
 };

@@ -9,8 +9,7 @@ TacticA new_TacticA()
 }
 int fightA(const TacticA this)
 {
-    this->super->power=(rand()%1001);
-    return this->super->power;
+    return rand()%1001;
 }
 
 void deleteTacticA(const TacticA this)

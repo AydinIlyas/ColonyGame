@@ -10,12 +10,12 @@ TacticB new_TacticB()
 
 int fightB(const TacticB this)
 {
-    this->super->power=(rand()%1001);
-    return this->super->power;
+    return rand()%1001;
 }
 
 void deleteTacticB(const TacticB this)
 {
+    if(this==NULL)return;
     this->super->delete(this->super);
     free(this);
 }

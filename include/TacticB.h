@@ -2,8 +2,6 @@
 #define TacticB_h 
 
 #include "Tactic.h"
-#include <stdlib.h>
-#include <stdio.h>
 struct TacticB{
     Tactic super;
     void (*delete)(struct TacticB*);

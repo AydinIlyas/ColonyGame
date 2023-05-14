@@ -21,10 +21,10 @@ Colony new_Colony(char symbol, int population, char tactic, char production)
     this->wins = 0;
     this->loses = 0;
 
-    this->fight = &fight;
-    this->produce=&produce;
+    this->fight = &fightColonies;
+    this->produce=&produceColony;
     this->checkAndReset = &checkAndReset;
-    this->endRound=&endRound;
+    this->roundImpact=&roundImpact;
     this->delete = &deleteColony;
     this->toString = &toString;
 }
@@ -47,17 +47,15 @@ void checkAndReset(const Colony colony)
         colony->population = 0;
     }
 }
-void fight(const Colony first, const Colony second)
+void fightColonies(const Colony first, const Colony second)
 {
     if (first->food <= 0 || second->food <= 0 || first->population <= 0 || second->population <= 0)
     {
         return;
     }
 
-     int scoreF = first->tacticCh == 'a' ? ((TacticA)first->Tactic)->super->fight(first->Tactic) : ((TacticB)first->Tactic)->super->fight(first->Tactic);
-    // printf("First %c: %d\n", first->symbol, scoreF);
-     int scoreS = second->tacticCh == 'a' ? ((TacticA)second->Tactic)->super->fight(second->Tactic) : ((TacticB)second->Tactic)->super->fight(second->Tactic);
-    // printf("Second %c: %d\n", second->symbol, scoreS);
+    int scoreF = first->tacticCh == 'a' ? ((TacticA)first->Tactic)->super->fight(first->Tactic) : ((TacticB)first->Tactic)->super->fight(first->Tactic);
+    int scoreS = second->tacticCh == 'a' ? ((TacticA)second->Tactic)->super->fight(second->Tactic) : ((TacticB)second->Tactic)->super->fight(second->Tactic);
     int difference = scoreF - scoreS;
     if (difference > 0)
     {
@@ -95,13 +93,13 @@ void fight(const Colony first, const Colony second)
         }
     }
 }
-void endRound(const Colony this)
+void roundImpact(const Colony this)
 {
     if(this->food<=0||this->population<=0)return;
     this->food-=this->population*2; 
     this->population=(double)this->population*12/10;
 }
-void produce(const Colony this)
+void produceColony(const Colony this)
 {
     if(this->food<=0||this->population<=0)return;
     if (this->productionCh == 'a')
@@ -118,26 +116,28 @@ int LengthInt(int num)
     int length = floor(log10(abs(num))) + 1;
     return length;
 }
-char *toString(const Colony this)
+char* toString(const Colony this)
 {
-    int length = 0;
+   int length = 0;
     length += 1;
     char *str;
     if (this->food > 0 && this->population > 0)
     {
         length += LengthInt(this->population);
         length += LengthInt(this->food);
-        length += LengthInt(this->wins);
-        length += LengthInt(this->loses);
-
-        str = (char *)malloc(sizeof(char) * length + 1000);
+        if(this->wins==0)length+=1;
+        else length += LengthInt(this->wins);
+        if(this->loses==0) length+=1;
+        else length += LengthInt(this->loses);
+        
+        str = (char *)malloc(sizeof(char)*length+10);
         sprintf(str, "%c\t\t%d\t\t%d\t\t%d\t\t%d\n", this->symbol, this->population, this->food, this->wins, this->loses);
 
     }
     else{
         length+=8;
         const char* lost="--"; 
-        str = (char *)malloc(sizeof(char) * length + 1000);
+        str = (char *)malloc(sizeof(char) * length+10);
         sprintf(str, "%c\t\t%s\t\t%s\t\t%s\t\t%s\n", this->symbol, lost,lost,lost,lost);
     }
     

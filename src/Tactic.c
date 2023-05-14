@@ -3,7 +3,6 @@ Tactic new_Tactic()
 {
     Tactic this=(Tactic)malloc(sizeof(struct Tactic));
     
-    this->power=-1;
     this->delete=&delete_Tactic;
     return this;
 }

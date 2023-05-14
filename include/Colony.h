@@ -22,17 +22,17 @@ struct Colony{
 
     void (*fight)(struct Colony*, struct Colony*);
     void (*checkAndReset)(struct Colony*);
-    void (*endRound)(struct Colony*);
+    void (*roundImpact)(struct Colony*);
     void (*produce)(struct Colony*);
     char* (*toString)(struct Colony*);
     void (*delete)(struct Colony*);
 };
 typedef struct Colony* Colony;
 Colony new_Colony(char symbol,int population,char tactic,char production);
-void fight(const Colony, const Colony);
+void fightColonies(const Colony, const Colony);
 void checkAndReset(const Colony);
-void endRound(const Colony);
-void produce(const Colony);
+void roundImpact(const Colony);
+void produceColony(const Colony);
 char* toString(const Colony);
 void deleteColony(const Colony);
 #endif
