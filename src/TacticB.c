@@ -1,4 +1,6 @@
 #include "TacticB.h"
+#include <stdlib.h>
+
 TacticB new_TacticB()
 {
     TacticB this=(TacticB)malloc(sizeof(struct TacticB));

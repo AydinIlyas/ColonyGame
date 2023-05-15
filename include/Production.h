@@ -1,7 +1,6 @@
 #ifndef Production_h
 #define Production_h
-#include <stdlib.h>
-#include <time.h>
+
 struct Production {
 
     int (*produce)();

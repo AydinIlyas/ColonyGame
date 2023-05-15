@@ -1,4 +1,9 @@
 #include "Game.h"
+#include <conio.h>
+#include <limits.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 Game new_Game()
 {
     Game this = (Game)malloc(sizeof(struct Game));
@@ -31,7 +36,7 @@ void expand(int **arr, const Game this)
 
 void getPopulations(const Game this)
 {
-    printf("\nENTER POPULATIONS (FORMAT: 'X X X' NO SPACE AT THE END!) : ");
+    printf("\nENTER POPULATIONS (FORMAT: 'X X X') : ");
     int *arr = (int *)malloc(this->capacity * sizeof(int));
     char temp;
     char input[1000];
@@ -41,7 +46,7 @@ void getPopulations(const Game this)
     while (token != NULL)
     {
         char *endptr;
-        int number = (int)strtol(token, &endptr, 10);
+        long number = strtol(token, &endptr, 10);
 
         // Check for conversion errors
         if (isspace(*endptr) || *endptr == '\0')
@@ -67,7 +72,7 @@ void getPopulations(const Game this)
 
     if(this->sizeAll<=1)
     {
-        printf("\nTHE SIZE SHOULD LEAST 2!\nPRESS q FOR EXIT | r FOR RESTART");
+        printf("\nTHERE SHOULD BE AT LEAST 2 POPULATIONS!\nPRESS q FOR EXIT | r FOR RESTART");
         char ch=getch();
         this->gameStatus=ch=='r'?2:0;
     }
@@ -77,7 +82,7 @@ void getPopulations(const Game this)
     {
         this->allColonies[i] = new_Colony(rand() % 222 + 33, arr[i], rand() % 2 + 97, rand() % 2 + 97);
     }
-    
+
     this->aliveColonies = malloc(this->sizeAll * sizeof(struct Colony *));
     this->sizeAlive = this->sizeAll;
     for (size_t i = 0; i < this->sizeAlive; i++)
@@ -127,7 +132,7 @@ void showPopulations(const Game this)
 {
     if(this->gameStatus==0||this->gameStatus==2)return;
     printRound(this, 0);
-    printf("\nPRESS A KEY TO START GAME\t|\tr FOR RESTART\t|\tq FOR EXIT\n\n");
+    printf("\nPRESS ANY KEY TO START GAME\t|\tr FOR RESTART\t|\tq FOR EXIT\n\n");
     char ch = getch();
     if (ch == 'r')
     {

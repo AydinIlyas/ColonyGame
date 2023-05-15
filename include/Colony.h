@@ -1,12 +1,6 @@
 #ifndef Colony_h
 #define Colony_h
 
-#include "TacticA.h"
-#include "TacticB.h"
-#include "ProductionA.h"
-#include "ProductionB.h"
-#include "string.h"
-#include "math.h"
 typedef void* Object;
 typedef enum {false,true} bool;
 struct Colony{

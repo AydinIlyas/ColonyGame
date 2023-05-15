@@ -1,5 +1,11 @@
 #include "Colony.h"
-
+#include "TacticA.h"
+#include "TacticB.h"
+#include "ProductionA.h"
+#include "ProductionB.h"
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 Colony new_Colony(char symbol, int population, char tactic, char production)
 {
     Colony this = (Colony)malloc(sizeof(struct Colony));

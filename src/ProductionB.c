@@ -1,4 +1,5 @@
 #include "ProductionB.h"
+#include <stdlib.h>
 
 ProductionB new_ProductionB()
 {
