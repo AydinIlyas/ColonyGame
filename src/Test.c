@@ -13,4 +13,5 @@ int main()
         play=game->gameStatus;
         game->delete (game);
     }
+    return 0;
 }

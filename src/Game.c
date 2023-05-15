@@ -34,16 +34,44 @@ void getPopulations(const Game this)
     printf("\nENTER POPULATIONS (FORMAT: 'X X X' NO SPACE AT THE END!) : ");
     int *arr = (int *)malloc(this->capacity * sizeof(int));
     char temp;
-    do
-    {
-        if (this->capacity == this->sizeAll)
-        {
-            expand(&arr, this);
-        }
-        scanf("%d%c", &arr[this->sizeAll], &temp);
-        this->sizeAll++;
+    char input[1000];
+    fgets(input, sizeof(input), stdin);
 
-    } while (temp != '\n');
+    char *token = strtok(input, " \n");
+    while (token != NULL)
+    {
+        char *endptr;
+        int number = (int)strtol(token, &endptr, 10);
+
+        // Check for conversion errors
+        if (isspace(*endptr) || *endptr == '\0')
+        {
+            if (number >= 0 && number <= INT_MAX)
+            {
+                arr[this->sizeAll] = (int)number;
+                this->sizeAll++;
+            }
+            else
+            {
+                printf("Integer value out of range: %d\n", number);
+            }
+        }
+        else
+        {
+            printf("INVALID INPUT: %s\n", token);
+        }
+
+        token = strtok(NULL, " \n");
+    }
+    printf("\n");
+
+    if(this->sizeAll<=1)
+    {
+        printf("\nTHE SIZE SHOULD LEAST 2!\nPRESS q FOR EXIT | r FOR RESTART");
+        char ch=getch();
+        this->gameStatus=ch=='r'?2:0;
+    }
+
     this->allColonies = malloc(this->sizeAll * sizeof(struct Colony *));
     for (size_t i = 0; i < this->sizeAll; i++)
     {
@@ -97,6 +125,7 @@ bool checkWinner(const Game this)
 
 void showPopulations(const Game this)
 {
+    if(this->gameStatus==0||this->gameStatus==2)return;
     printRound(this, 0);
     printf("\nPRESS A KEY TO START GAME\t|\tr FOR RESTART\t|\tq FOR EXIT\n\n");
     char ch = getch();
@@ -125,8 +154,8 @@ void shrinkAlives(const Game this, int deads)
         }
     }
     free(this->aliveColonies);
-    this->aliveColonies=tmp;
-    this->sizeAlive-=deads;
+    this->aliveColonies = tmp;
+    this->sizeAlive -= deads;
 }
 void startRounds(const Game this)
 {
@@ -155,7 +184,8 @@ void startRounds(const Game this)
     char g;
     if (checkWinner(this))
     {
-        printf("\nPRESS A KEY TO EXIT\t|\tr FOR RESTART\n\n");
+        printf("\nGAME OVER!\n");
+        printf("\nPRESS ANY KEY TO EXIT\t|\tr FOR RESTART\n\n");
         g = getch();
         if (g == 'r')
         {
@@ -169,7 +199,7 @@ void startRounds(const Game this)
     }
     else
     {
-        printf("\nPRESS A KEY TO CONTINUE\t|\tr FOR RESTART\t|\tPress q FOR EXIT\n\n");
+        printf("\nPRESS ANY KEY TO CONTINUE\t|\tr FOR RESTART\t|\tPress q FOR EXIT\n\n");
         g = getch();
         if (g == 'q')
         {

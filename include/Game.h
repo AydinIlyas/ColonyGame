@@ -2,6 +2,8 @@
 #define Game_h
 #include "Colony.h"
 #include <conio.h>
+#include <limits.h>
+#include <ctype.h>
 struct Game{
     size_t sizeAll;
     size_t sizeAlive;
