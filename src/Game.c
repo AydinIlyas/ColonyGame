@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 Game new_Game()
 {
     Game this = (Game)malloc(sizeof(struct Game));
@@ -47,18 +48,22 @@ void getPopulations(const Game this)
     {
         char *endptr;
         long number = strtol(token, &endptr, 10);
+        if(this->sizeAll==this->capacity)
+        {
+            expand(&arr,this);
+        }
 
         // Check for conversion errors
         if (isspace(*endptr) || *endptr == '\0')
         {
-            if (number >= 0 && number <= INT_MAX)
+            if (number > 0 && number <= (int)sqrt(INT_MAX))
             {
                 arr[this->sizeAll] = (int)number;
                 this->sizeAll++;
             }
             else
             {
-                printf("Integer value out of range: %d\n", number);
+                printf("Integer value out of range for Food(Food=Pop^2): %d\n", number);
             }
         }
         else
